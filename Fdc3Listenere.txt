@@ -1,0 +1,48 @@
+import org.fdc3.api.Fdc3;
+import org.fdc3.api.context.Context;
+import org.fdc3.api.listener.ContextListener;
+import org.fdc3.api.channel.Channel;
+
+public class Fdc3Listener {
+    
+    private Fdc3 fdc3;
+
+    public Fdc3Listener() {
+        try {
+            // Initialize FDC3 API
+            fdc3 = Fdc3.getInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void listenToChannel(String channelName) {
+        try {
+            // Join a specific channel by name
+            Channel channel = fdc3.getOrCreateChannel(channelName);
+
+            // Set up the listener for the channel
+            channel.addContextListener(new ContextListener() {
+                @Override
+                public void onContext(Context context) {
+                    // Handle the incoming context here
+                    System.out.println("Received context on channel " + channelName + ": " + context.toString());
+                    
+                    // You can add your logic here to process the context
+                }
+            });
+
+            System.out.println("Listening to channel: " + channelName);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        Fdc3Listener listener = new Fdc3Listener();
+
+        // Example of listening to a specific channel
+        listener.listenToChannel("my-channel-name");
+    }
+}
